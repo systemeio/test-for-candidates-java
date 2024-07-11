@@ -7,11 +7,16 @@ public class Main {
         boolean success;
         int statusCode;
         String message;
+
+        //TODO обработать запрос и возможные ошибки
         try {
+            if (request.price() < 0) {
+                throw new IllegalArgumentException("Price must be greater than zero");
+            }
             switch (request.paymentProcessor()) {
                 case "paypal" -> success = new Paypal().payWithProcessor(request.price());
                 case "stripe" -> success = new StripePaymentProcessor().payWithProcessor(request.price());
-                default -> throw new Exception("Unknown PaymentProcessor");
+                default -> throw new IllegalArgumentException("Unknown PaymentProcessor");
             }
             if (success) {
                 statusCode = 200;
