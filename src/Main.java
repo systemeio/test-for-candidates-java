@@ -1,5 +1,4 @@
-import payment.PaypalPaymentProcessor;
-import payment.StripePaymentProcessor;
+
 
 public class Main {
     public static void main(String[] args) {
@@ -9,28 +8,6 @@ public class Main {
         String message;
 
         //TODO обработать запрос и возможные ошибки
-        try {
-            if (request.price() < 0) {
-                throw new IllegalArgumentException("Price must be greater than zero");
-            }
-            switch (request.paymentProcessor()) {
-                case "paypal" -> {
-                    new PaypalPaymentProcessor().makePayment((int) request.price());
-                    success = true;
-                }
-                case "stripe" -> success = new StripePaymentProcessor().pay((float) request.price());
-                default -> throw new IllegalArgumentException("Unknown PaymentProcessor");
-            }
-            if (success) {
-                statusCode = 200;
-                message = "Payment successful";
-            } else {
-                throw new Exception("Unsuccessful Payment");
-            }
-        } catch (Exception e) {
-            statusCode = 400;
-            message = e.getMessage();
-        }
 
         Response response = new Response(statusCode, message);
 
